@@ -1,0 +1,65 @@
+<div class="board-shell">
+    <section class="game-window" aria-label="Interface du plateau de jeu Chèvre et Collecteur">
+        <header class="top-interface">
+            <nav class="menu-card" aria-label="Actions principales">
+                <button type="button" class="menu-action" (click)="goBackToMenu()">
+                    <span class="menu-icon" aria-hidden="true">⌂</span>
+                    <span>Menu</span>
+                </button>
+
+                <button type="button" class="menu-action" (click)="replay()">
+                    <span class="menu-icon" aria-hidden="true">↻</span>
+                    <span>Replay</span>
+                </button>
+
+                <button type="button" class="menu-action">
+                    <span class="menu-icon" aria-hidden="true">?</span>
+                    <span>Règles</span>
+                </button>
+            </nav>
+
+            <aside class="status-card" aria-live="polite">
+                <div class="turn-box">
+                    <span>Tours</span>
+                    <strong>{{ getTurnCount() }}</strong>
+                </div>
+
+                <div class="turn-box">
+                    <span>Choux</span>
+                    <strong>{{ getCabbageCount() }}</strong>
+                </div>
+
+                <div id="details-informations" class="status-text">
+                    Le collecteur doit se placer.
+                </div>
+            </aside>
+        </header>
+
+        <main class="board-area">
+            <div #visualiser id="visualiser" class="game-board" aria-label="Plateau de jeu"></div>
+        </main>
+
+        <footer class="bottom-interface">
+            <button type="button" (click)="validateTurn()" class="game-action action-valid">
+                <span class="action-icon" aria-hidden="true">✓</span>
+                <span>Finir le tour</span>
+            </button>
+
+            <button type="button" (click)="cancelMove()" class="game-action action-cancel">
+                <span class="action-icon" aria-hidden="true">↶</span>
+                <span>Annuler</span>
+            </button>
+        </footer>
+    </section>
+
+    <svg class="svg-patterns" aria-hidden="true" focusable="false">
+        <defs>
+            <pattern id="goat" x="0" y="0" width="1" height="1">
+                <image x="0" y="0" href="assets/goat.svg" width="60" height="60"></image>
+            </pattern>
+            <pattern id="cabbage" x="0" y="0" width="1" height="1">
+                <image x="0" y="0" href="assets/cabbageV2.svg" width="60" height="60"></image>
+            </pattern>
+        </defs>
+    </svg>
+</div>

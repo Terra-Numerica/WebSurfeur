@@ -1,0 +1,173 @@
+<div class="config-shell">
+    <section class="config-page" aria-label="Configuration de partie Chèvre et Collecteur">
+        <header class="page-header">
+            <button type="button" class="header-button back-button" (click)="goBack()" aria-label="Retour">
+                <span aria-hidden="true">←</span>
+            </button>
+
+            <div class="title-block">
+                <p>Chèvre &amp; Choux</p>
+                <h1>Jeu libre</h1>
+            </div>
+
+            <button type="button" class="header-button rules-button" (click)="displayRules()">
+                Règles
+            </button>
+        </header>
+
+        <main class="config-layout">
+            <section class="config-card board-card" aria-labelledby="board-title">
+                <div class="section-title">
+                    <span class="section-number">01</span>
+                    <h2 id="board-title">Plateau de jeu</h2>
+                </div>
+
+                <div class="board-options-list">
+                    <button
+                        type="button"
+                        *ngFor="let conf of configurations"
+                        (click)="selectConfiguration(conf)"
+                        class="choice-card board-choice"
+                        [ngClass]="isSelectedConfiguration(conf)"
+                    >
+                        <span class="choice-visual graph-visual">
+                            <img [src]="getConfigurationIcon(conf)" [class]="'icon-' + conf" alt="" aria-hidden="true">
+                        </span>
+                        <span>{{getConfigurationName(conf)}}</span>
+                    </button>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="params-block">
+                    <h3>Paramètres</h3>
+
+                    <div class="param-row">
+                        <label for="param1">{{getParam1Name()}}</label>
+                        <input
+                            id="param1"
+                            type="number"
+                            name="param1"
+                            [min]="configuration_param_boundaries[selected_configuration].param1.min"
+                            [max]="configuration_param_boundaries[selected_configuration].param1.max"
+                            [(ngModel)]="param1"
+                            (blur)="checkValueRightness($event)"
+                        >
+                    </div>
+
+                    <div *ngIf="param2 !== -1" class="param-row">
+                        <label for="param2">{{getParam2Name()}}</label>
+                        <input
+                            id="param2"
+                            type="number"
+                            name="param2"
+                            [min]="configuration_param_boundaries[selected_configuration].param2!.min"
+                            [max]="configuration_param_boundaries[selected_configuration].param2!.max"
+                            [(ngModel)]="param2"
+                            (blur)="checkValueRightness($event)"
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section class="right-column">
+                <section class="config-card opponent-card">
+                    <div class="section-title">
+                        <span class="section-number">02</span>
+                        <h2>Adversaire</h2>
+                    </div>
+
+                    <div class="choice-grid two-columns">
+                        <button
+                            type="button"
+                            *ngFor="let type of opponent_types"
+                            (click)="selectOpponentType(type)"
+                            class="choice-card opponent-type"
+                            [ngClass]="isSelectedOpponentType(type)"
+                        >
+                            <span class="choice-visual opponent-visual">
+                                <img src="assets/vs_{{type}}.svg" alt="" aria-hidden="true">
+                            </span>
+                            <span>{{getOpponentTypeMessage(type)}}</span>
+                        </button>
+                    </div>
+
+                    <div *ngIf="isOnePlayerGame()" class="camp-block">
+                        <div class="divider"></div>
+
+                        <h3>Votre camp</h3>
+
+                        <div class="choice-grid two-columns">
+                            <button
+                                type="button"
+                                *ngFor="let side of sides"
+                                (click)="selectSide(side)"
+                                class="choice-card side-choice"
+                                [ngClass]="isSelectedSide(side)"
+                            >
+                                <span class="choice-visual player-visual">
+                                    <img src="assets/{{side === 'collector' ? 'harvest' : side}}.svg" alt="" aria-hidden="true">
+                                </span>
+                                <span>{{getSideName(side)}}</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="config-card inline-settings-card speed-only-card">
+                    <div class="inline-setting">
+                        <div class="section-title centered-title">
+                            <span class="section-number">03</span>
+                            <h2>Capacité de récolte</h2>
+                        </div>
+
+                        <div class="number-control">
+                            <input
+                                id="speed"
+                                min="1"
+                                type="number"
+                                name="speed"
+                                [(ngModel)]="harvest_capacity"
+                                (blur)="checkValueRightness($event)"
+                            >
+                        </div>
+                    </div>
+                </section>
+
+                <section class="config-card difficulty-card">
+                    <div class="section-title">
+                        <span class="section-number">04</span>
+                        <h2>Difficulté</h2>
+                    </div>
+
+                    <div class="level-selection-list" role="radiogroup" aria-label="Niveau de difficulté">
+                        <label class="level-selection-list-item" [ngClass]="isSelectedLevel('easy')" for="mode1">
+                            <span>Facile</span>
+                            <input [(ngModel)]="selected_level" type="radio" id="mode1" name="mode" value="easy">
+                        </label>
+
+                        <label class="level-selection-list-item" [ngClass]="isSelectedLevel('medium')" for="mode2">
+                            <span>Normal</span>
+                            <input [(ngModel)]="selected_level" type="radio" id="mode2" name="mode" value="medium">
+                        </label>
+
+                        <label class="level-selection-list-item" [ngClass]="isSelectedLevel('hard')" for="mode3">
+                            <span>Difficile</span>
+                            <input [(ngModel)]="selected_level" type="radio" id="mode3" name="mode" value="hard">
+                        </label>
+
+                        <label class="level-selection-list-item" [ngClass]="isSelectedLevel('extreme')" for="mode4">
+                            <span>Extrême</span>
+                            <input [(ngModel)]="selected_level" type="radio" id="mode4" name="mode" value="extreme">
+                        </label>
+                    </div>
+                </section>
+
+                <button type="button" class="start-button" (click)="startGame()">
+                    <span>Lancer la partie</span>
+                    <span aria-hidden="true">➜</span>
+                </button>
+            </section>
+        </main>
+    </section>
+</div>
